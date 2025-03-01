@@ -1,8 +1,6 @@
 # TaskMate
 
-### Backend
-
-TaskMate is a full-stack task management application with authentication, built using **Node.js, Express, and MongoDB**. This is the backend repository that provides authentication and task management APIs.
+TaskMate is a full-stack task management application with authentication, built using **React Native (Expo), Node.js, Express, and MongoDB**.
 
 ## Features
 
@@ -10,16 +8,27 @@ TaskMate is a full-stack task management application with authentication, built 
 - Task management (Create, Read, Update, Delete)
 - Protected routes using JWT middleware
 - MongoDB as the database
-- Deployed on Render
+- Pull-to-refresh functionality
+- Deployed on Render (Backend) and Expo (Frontend)
 
 ## Tech Stack
 
-- **Backend:** Node.js, Express.js
+### Frontend
+
+- **Framework:** React Native (Expo)
+- **Navigation:** Expo Router
+- **UI Components:** React Native Paper
+- **Storage:** AsyncStorage for JWT tokens
+- **State Management:** React Hooks
+
+### Backend
+
+- **Server:** Node.js, Express.js
 - **Database:** MongoDB, Mongoose
 - **Authentication:** JWT, bcrypt.js
 - **Deployment:** Render
 
-## Installation
+## Installation Guide
 
 ### Prerequisites
 
@@ -27,39 +36,60 @@ Make sure you have the following installed:
 
 - **Node.js** (v16+ recommended)
 - **MongoDB** (Local or Atlas)
+- **Expo CLI**
 - **Git**
 
 ### Steps to Run Locally
 
-1. **Clone the repository:**
+#### **1. Clone the repository**
 
-   ```sh
-   git clone https://github.com/BharathKumar-c/TaskMate.git
-   cd TaskMate
-   ```
+```sh
+git clone https://github.com/BharathKumar-c/TaskMate.git
+cd TaskMate
+```
 
-2. **Install dependencies:**
+#### **2. Setup Backend**
 
-   ```sh
-   npm install
-   ```
+```sh
+cd backend
+npm install
+```
 
-3. **Create a `.env` file in the root directory and add:**
+Create a `.env` file inside `backend/` and add:
 
-   ```env
-   MONGO_URI=your_mongodb_connection_string
-   JWT_SECRET=your_secret_key
-   PORT=5000
-   ```
+```env
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+PORT=5000
+```
 
-4. **Run the server:**
-   ```sh
-   npm start
-   ```
-   OR with nodemon (for development):
-   ```sh
-   npm run dev
-   ```
+Run the backend server:
+
+```sh
+npm start
+```
+
+OR with nodemon (for development):
+
+```sh
+npm run dev
+```
+
+#### **3. Setup Frontend**
+
+```sh
+cd ..
+cd frontend
+npm install
+```
+
+Run the Expo development server:
+
+```sh
+npx expo start
+```
+
+Scan the QR code using **Expo Go** on your mobile device.
 
 ## API Endpoints
 
@@ -83,11 +113,14 @@ Make sure you have the following installed:
 
 ## Deployment
 
-This backend is deployed on **Render**. The base URL for the API:
+- **Backend:** Deployed on **Render** [TaskMate Backend](https://task-mate-backend-x42q.onrender.com)
+- **Frontend:** Build an Expo APK:
 
+```sh
+eas build --profile preview --platform android
 ```
-https://task-mate-backend-x42q.onrender.com
-```
+
+(Replace with your Expo build link once completed.)
 
 ## License
 
