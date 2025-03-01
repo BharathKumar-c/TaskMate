@@ -7,35 +7,27 @@ import {
   Alert,
   ActivityIndicator,
   StyleSheet,
-  TouchableOpacity,
+  RefreshControl,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {useRouter} from 'expo-router';
+import {TouchableOpacity} from 'react-native';
 
 const HomeScreen = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    checkAuthAndFetchTasks();
+    fetchTasks();
   }, []);
 
-  const checkAuthAndFetchTasks = async () => {
-    const token = await AsyncStorage.getItem('token');
-
-    if (!token) {
-      router.replace('/login'); // Redirect to login if no token
-      return;
-    }
-
-    fetchTasks(token);
-  };
-
-  const fetchTasks = async (token) => {
+  const fetchTasks = async () => {
     setLoading(true);
     try {
+      const token = await AsyncStorage.getItem('token');
       const res = await axios.get(
         'https://task-mate-backend-x42q.onrender.com/tasks',
         {
@@ -44,14 +36,15 @@ const HomeScreen = () => {
       );
       setTasks(res.data);
     } catch (error) {
-      if (error.response?.status === 401) {
-        await AsyncStorage.removeItem('token');
-        router.replace('/login'); // Redirect to login on unauthorized error
-      } else {
-        Alert.alert('Error', 'Failed to load tasks');
-      }
+      Alert.alert('Error', 'Failed to load tasks');
     }
     setLoading(false);
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchTasks();
+    setRefreshing(false);
   };
 
   const handleLogout = async () => {
@@ -62,7 +55,6 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Your Tasks</Text>
-      <Button title="Add Task" onPress={() => router.push('/add-task')} />
       {loading ? (
         <ActivityIndicator size="large" />
       ) : (
@@ -78,8 +70,12 @@ const HomeScreen = () => {
               </View>
             </TouchableOpacity>
           )}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
         />
       )}
+      <Button title="Add Task" onPress={() => router.push('/add-task')} />
       <Button title="Logout" onPress={handleLogout} />
     </View>
   );
