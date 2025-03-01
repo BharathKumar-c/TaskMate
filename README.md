@@ -35,7 +35,7 @@ Make sure you have the following installed:
 
    ```sh
    git clone https://github.com/BharathKumar-c/TaskMate.git
-   cd taskmate-backend
+   cd TaskMate
    ```
 
 2. **Install dependencies:**
