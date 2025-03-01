@@ -1,6 +1,6 @@
 # TaskMate
 
-## Backend
+### Backend
 
 TaskMate is a full-stack task management application with authentication, built using **Node.js, Express, and MongoDB**. This is the backend repository that provides authentication and task management APIs.
 
@@ -34,7 +34,7 @@ Make sure you have the following installed:
 1. **Clone the repository:**
 
    ```sh
-   git clone https://github.com/your-username/taskmate-backend.git
+   git clone https://github.com/BharathKumar-c/TaskMate.git
    cd taskmate-backend
    ```
 
@@ -86,7 +86,7 @@ Make sure you have the following installed:
 This backend is deployed on **Render**. The base URL for the API:
 
 ```
-https://taskmate-backend.onrender.com
+https://task-mate-backend-x42q.onrender.com
 ```
 
 ## License
