@@ -7,6 +7,7 @@ import {
   Alert,
   ActivityIndicator,
   StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -69,10 +70,13 @@ const HomeScreen = () => {
           data={tasks}
           keyExtractor={(item) => item._id}
           renderItem={({item}) => (
-            <View style={styles.taskCard}>
-              <Text style={styles.taskTitle}>{item.title}</Text>
-              <Text>{item.description}</Text>
-            </View>
+            <TouchableOpacity
+              onPress={() => router.push(`/task-details/${item._id}`)}>
+              <View style={styles.taskCard}>
+                <Text style={styles.taskTitle}>{item.title}</Text>
+                <Text>{item.description}</Text>
+              </View>
+            </TouchableOpacity>
           )}
         />
       )}
