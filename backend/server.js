@@ -14,7 +14,7 @@ app.use(cors());
 
 // Routes
 app.use('/auth', authRoutes);
-// app.use('/tasks', taskRoutes);
+app.use('/tasks', taskRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 5000;
