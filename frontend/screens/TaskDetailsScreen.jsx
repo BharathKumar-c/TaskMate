@@ -1,8 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, TextInput, Button, Alert, StyleSheet} from 'react-native';
+import {View, Text, TextInput, Alert, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {useLocalSearchParams, useRouter} from 'expo-router';
+import {Button} from 'react-native-paper';
 
 const TaskDetailsScreen = () => {
   const {id} = useLocalSearchParams();
@@ -70,8 +71,15 @@ const TaskDetailsScreen = () => {
         value={description}
         onChangeText={setDescription}
       />
-      <Button title="Update Task" onPress={handleUpdateTask} />
-      <Button title="Delete Task" color="red" onPress={handleDeleteTask} />
+      <Button
+        mode="contained"
+        onPress={handleUpdateTask}
+        style={{marginBottom: 10}}>
+        Update Task
+      </Button>
+      <Button mode="contained" color="red" onPress={handleDeleteTask}>
+        Delete Task
+      </Button>
     </View>
   );
 };
