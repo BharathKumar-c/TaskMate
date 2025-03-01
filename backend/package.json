@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "task-mate",
   "version": "1.0.0",
   "description": "Its backend for task-mate application its use to manage our todos",
