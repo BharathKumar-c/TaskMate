@@ -61,6 +61,7 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Your Tasks</Text>
+      <Button title="Add Task" onPress={() => router.push('/add-task')} />
       {loading ? (
         <ActivityIndicator size="large" />
       ) : (
