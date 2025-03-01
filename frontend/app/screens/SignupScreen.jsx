@@ -1,24 +1,26 @@
 import React, {useState} from 'react';
 import {View, Text, TextInput, Button, Alert, StyleSheet} from 'react-native';
 import axios from 'axios';
+import {useRouter} from 'expo-router';
 
-const SignupScreen = ({navigation}) => {
+const SignupScreen = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
 
   const handleSignup = async () => {
     try {
-      const res = await axios.post(
-        'https://taskmate-backend.onrender.com/auth/signup',
+      await axios.post(
+        'https://task-mate-backend-x42q.onrender.com/auth/signup',
         {
           name,
           email,
           password,
         }
       );
-      Alert.alert('Success', 'User registered! You can now log in.');
-      navigation.navigate('Login');
+      Alert.alert('Success', 'Account created! Please log in.');
+      router.replace('/login');
     } catch (error) {
       Alert.alert('Error', error.response?.data?.message || 'Signup failed.');
     }
@@ -47,7 +49,7 @@ const SignupScreen = ({navigation}) => {
         onChangeText={setPassword}
       />
       <Button title="Sign Up" onPress={handleSignup} />
-      <Text onPress={() => navigation.navigate('Login')} style={styles.link}>
+      <Text onPress={() => router.replace('/login')} style={styles.link}>
         Already have an account? Login
       </Text>
     </View>
