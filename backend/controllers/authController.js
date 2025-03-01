@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import {addToBlacklist} from '../utils/tokenBlacklist.js';
 
 // User Registeration
 export const register = async (req, res) => {
@@ -49,12 +50,25 @@ export const login = async (req, res) => {
     }
 
     // generate JWT token
-    const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {
+    const token = jwt.sign({userId: user._id}, process.env.JWT_SECRET, {
       expiresIn: '7d',
     });
 
-    res.json({token, user: {id: user._id, name: user.name, email: user.email}});
+    res.json({
+      token,
+      user: {id: user._id, name: user.name, email: user.email},
+      expiresIn: 604800,
+    });
   } catch (error) {
     res.status(500).json({message: 'Server error', error: error.message});
   }
+};
+
+// User Logout
+export const logout = (req, res) => {
+  const token = req.header('Authorization')?.replace('Bearer ', '');
+  if (!token) return res.status(400).json({message: 'No token provided.'});
+
+  addToBlacklist(token);
+  res.json({message: 'Logged out successfully'});
 };

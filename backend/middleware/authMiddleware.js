@@ -1,13 +1,18 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import {isBlacklisted} from '../utils/tokenBlacklist.js';
 
 dotenv.config();
 
 const authMiddleware = (req, res, next) => {
-  const token = req.header('Authorization');
+  const token = req.header('Authorization')?.replace('Bearer ', '');
 
   if (!token) {
-    return res.status(401).json({message: 'No token, authorization denied'});
+    return res.status(401).json({message: 'Access denied. No token provided.'});
+  }
+
+  if (isBlacklisted(token)) {
+    return res.status(401).json({message: 'Token has been invalidated'});
   }
 
   try {
@@ -15,7 +20,7 @@ const authMiddleware = (req, res, next) => {
     req.user = decoded.userId;
     next();
   } catch (error) {
-    res.status(401).json({message: 'Token is not valid'});
+    res.status(401).json({message: 'Invalid token'});
   }
 };
 
