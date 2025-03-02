@@ -6,6 +6,7 @@ import {
   Alert,
   StyleSheet,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import axios from 'axios';
 import logo from '../assets/images/logo.png';
@@ -17,10 +18,17 @@ import CustomTextInput from '../components/CustomTextInput';
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false); // Loading state
   const router = useRouter();
   const dispatch = useDispatch();
 
   const handleLogin = async () => {
+    if (!email.trim() || !password.trim()) {
+      Alert.alert('Error', 'Please enter email and password.');
+      return;
+    }
+
+    setLoading(true); // Start loading
     try {
       const res = await axios.post(
         'https://task-mate-backend-x42q.onrender.com/auth/login',
@@ -29,11 +37,13 @@ const LoginScreen = () => {
           password,
         }
       );
+
       dispatch(setUser({user: res.data.user, token: res.data.token}));
-      router.replace('/');
+      router.replace('/home');
     } catch (error) {
       Alert.alert('Error', error.response?.data?.message || 'Login failed.');
     }
+    setLoading(false); // Stop loading
   };
 
   return (
@@ -45,6 +55,7 @@ const LoginScreen = () => {
           Smarter tasks, better productivity.
         </Text>
       </View>
+
       <CustomTextInput
         label="Email"
         value={email}
@@ -60,12 +71,19 @@ const LoginScreen = () => {
         secureTextEntry
         placeholder="Enter your password"
       />
+
+      {/* Login Button with Loading Indicator */}
       <TouchableOpacity
         style={styles.loginBtn}
-        title="Login"
-        onPress={handleLogin}>
-        <Text style={styles.loginBtnText}>Login</Text>
+        onPress={handleLogin}
+        disabled={loading}>
+        {loading ? (
+          <ActivityIndicator size="small" color="#fff" />
+        ) : (
+          <Text style={styles.loginBtnText}>Login</Text>
+        )}
       </TouchableOpacity>
+
       <Text onPress={() => router.push('/signup')} style={styles.link}>
         Don't have an account? Sign up
       </Text>
@@ -74,6 +92,7 @@ const LoginScreen = () => {
 };
 
 export default LoginScreen;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -81,13 +100,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  input: {borderWidth: 1, padding: 10, marginBottom: 10, borderRadius: 5},
   link: {color: 'blue', marginTop: 10, textAlign: 'center'},
   logoBox: {
     width: '100%',
@@ -120,12 +132,12 @@ const styles = StyleSheet.create({
     height: 50,
     width: '100%',
     marginTop: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   loginBtnText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
-    textAlign: 'center',
-    marginTop: 10,
   },
 });

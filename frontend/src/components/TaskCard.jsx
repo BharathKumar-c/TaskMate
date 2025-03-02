@@ -3,13 +3,11 @@ import React from 'react';
 import {MotiView} from 'moti';
 import {useRouter} from 'expo-router';
 
-const TaskCard = ({item, index}) => {
+const TaskCard = ({item, index, onPress}) => {
   const router = useRouter();
 
   return (
-    <TouchableOpacity
-      style={styles.taskCard}
-      onPress={() => router.push(`/task-details/${item._id}`)}>
+    <TouchableOpacity style={styles.taskCard} onPress={onPress}>
       <MotiView
         from={{opacity: 0, translateY: 10}}
         animate={{opacity: 1, translateY: 0}}

@@ -1,13 +1,19 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput, Button, Alert, StyleSheet} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  Alert,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import axios from 'axios';
-import {useRouter} from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {globalStyles} from '../styles/globalStyles';
 
-const AddTaskScreen = () => {
+const AddTaskForm = ({onTaskAdded}) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const router = useRouter();
 
   const handleAddTask = async () => {
     if (!title.trim()) {
@@ -17,13 +23,15 @@ const AddTaskScreen = () => {
 
     try {
       const token = await AsyncStorage.getItem('token');
-      await axios.post(
+      const res = await axios.post(
         'https://task-mate-backend-x42q.onrender.com/tasks',
         {title, description},
         {headers: {Authorization: `Bearer ${token}`}}
       );
-      Alert.alert('Success', 'Task added successfully!');
-      router.replace('/');
+
+      onTaskAdded(res.data);
+      setTitle('');
+      setDescription('');
     } catch (error) {
       Alert.alert('Error', 'Failed to add task.');
     }
@@ -31,7 +39,6 @@ const AddTaskScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Add New Task</Text>
       <TextInput
         style={styles.input}
         placeholder="Task Title"
@@ -39,25 +46,36 @@ const AddTaskScreen = () => {
         onChangeText={setTitle}
       />
       <TextInput
-        style={styles.input}
+        style={[styles.input, styles.description]}
         placeholder="Task Description"
         value={description}
         onChangeText={setDescription}
+        multiline
       />
-      <Button title="Add Task" onPress={handleAddTask} />
+      <TouchableOpacity style={globalStyles.button} onPress={handleAddTask}>
+        <Text style={globalStyles.buttonText}>Add Task</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {flex: 1, justifyContent: 'center', padding: 20},
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
+  container: {
+    width: '100%',
+    padding: 15,
   },
-  input: {borderWidth: 1, padding: 10, marginBottom: 10, borderRadius: 5},
+  input: {
+    borderWidth: 1,
+    padding: 12,
+    marginBottom: 10,
+    borderRadius: 8,
+    borderColor: '#ccc',
+    backgroundColor: 'white',
+  },
+  description: {
+    height: 80,
+    textAlignVertical: 'top',
+  },
 });
 
-export default AddTaskScreen;
+export default AddTaskForm;

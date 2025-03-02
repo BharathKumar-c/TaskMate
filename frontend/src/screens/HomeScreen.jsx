@@ -13,12 +13,17 @@ import axios from 'axios';
 import {useRouter} from 'expo-router';
 import Header from '../components/Header';
 import {useSelector, useDispatch} from 'react-redux';
-import {setTasks} from '../state/slices/taskSlice';
+import {setTasks, addTask} from '../state/slices/taskSlice';
 import TaskCard from '../components/TaskCard';
+import BottomSheet from '../components/BottomSheet';
+import AddTaskForm from '../components/AddTaskForm';
+import EditTaskForm from '../components/EditTaskForm';
 
 const HomeScreen = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [showSheet, setShowSheet] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
   const router = useRouter();
   const tasks = useSelector((state) => state.tasks);
   const dispatch = useDispatch();
@@ -32,7 +37,6 @@ const HomeScreen = () => {
     try {
       const token = await AsyncStorage.getItem('token');
       if (!token) {
-        Alert.alert('Error', 'Unauthorized. Please log in again.');
         router.replace('/login');
         return;
       }
@@ -62,9 +66,24 @@ const HomeScreen = () => {
     setRefreshing(false);
   };
 
+  const handleAddTask = (newTask) => {
+    dispatch(addTask(newTask));
+    setSelectedTask(null);
+    setShowSheet(false);
+  };
+
+  const handleOpenAddTask = () => {
+    setSelectedTask(null);
+    setShowSheet(true);
+  };
+
+  const handleEditTask = (task) => {
+    setSelectedTask(task);
+    setShowSheet(true);
+  };
+
   return (
     <>
-      {/* Header with Logout Icon */}
       <Header />
       <View style={styles.container}>
         {loading ? (
@@ -75,7 +94,11 @@ const HomeScreen = () => {
             data={tasks}
             keyExtractor={(item) => item._id}
             renderItem={({item, index}) => (
-              <TaskCard item={item} index={index} />
+              <TaskCard
+                item={item}
+                index={index}
+                onPress={() => handleEditTask(item)}
+              />
             )}
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -87,9 +110,23 @@ const HomeScreen = () => {
           style={styles.fab}
           icon="plus"
           color="white"
-          onPress={() => router.push('/add-task')}
+          onPress={handleOpenAddTask}
         />
       </View>
+
+      {/* Bottom Sheet for Adding & Editing Task */}
+      {showSheet && (
+        <BottomSheet isVisible={showSheet} onClose={() => setShowSheet(false)}>
+          {selectedTask ? (
+            <EditTaskForm
+              task={selectedTask}
+              onClose={() => setShowSheet(false)}
+            />
+          ) : (
+            <AddTaskForm onTaskAdded={handleAddTask} />
+          )}
+        </BottomSheet>
+      )}
     </>
   );
 };
@@ -99,26 +136,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#f5f5f5',
-  },
-  taskCard: {
-    padding: 15,
-    backgroundColor: 'white',
-    borderRadius: 8,
-    marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  taskTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'black',
-  },
-  taskDescription: {
-    fontSize: 14,
-    color: '#666',
   },
   taskList: {
     flex: 1,

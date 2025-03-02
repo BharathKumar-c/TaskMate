@@ -1,2 +1,2 @@
-import HomeScreen from '../screens/HomeScreen';
-export default HomeScreen;
+import SplashScreen from '../screens/SplashScreen';
+export default SplashScreen;
