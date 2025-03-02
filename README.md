@@ -122,6 +122,15 @@ eas build --profile preview --platform android
 
 (Replace with your Expo build link once completed.)
 
+## 🧑‍💻 Demo Credentials
+
+Use the following credentials to log in and test the application:
+
+```json
+  "email": "admin@tm.com",
+  "password": "admin123"
+```
+
 ## License
 
 This project is open-source and available under the MIT License.
