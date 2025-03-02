@@ -114,7 +114,7 @@ Scan the QR code using **Expo Go** on your mobile device.
 ## Deployment
 
 - **Backend:** Deployed on **Render** [TaskMate Backend](https://task-mate-backend-x42q.onrender.com)
-- **Frontend:** Build an Expo APK:
+- **Frontend:** Build an Expo APK: [Download TaskMate APK](https://expo.dev/accounts/barathtechbumbles/projects/taskmate/builds/aa472545-35e3-4d03-8020-7215b7aaf4ec)
 
 ```sh
 eas build --profile preview --platform android
