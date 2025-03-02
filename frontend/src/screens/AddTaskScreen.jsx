@@ -1,8 +1,18 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput, Button, Alert, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  Button,
+  Alert,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {useRouter} from 'expo-router';
+import {globalStyles} from '../styles/globalStyles';
+import CustomTextInput from '../components/CustomTextInput';
 
 const AddTaskScreen = () => {
   const [title, setTitle] = useState('');
@@ -30,34 +40,24 @@ const AddTaskScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Add New Task</Text>
-      <TextInput
-        style={styles.input}
+    <View style={globalStyles.container}>
+      <Text style={globalStyles.title}>Add New Task</Text>
+      <CustomTextInput
         placeholder="Task Title"
         value={title}
         onChangeText={setTitle}
       />
-      <TextInput
-        style={styles.input}
+      <CustomTextInput
         placeholder="Task Description"
         value={description}
         onChangeText={setDescription}
+        multiline
       />
-      <Button title="Add Task" onPress={handleAddTask} />
+      <TouchableOpacity style={globalStyles.button} onPress={handleAddTask}>
+        <Text style={globalStyles.buttonText}>Add Task</Text>
+      </TouchableOpacity>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {flex: 1, justifyContent: 'center', padding: 20},
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  input: {borderWidth: 1, padding: 10, marginBottom: 10, borderRadius: 5},
-});
 
 export default AddTaskScreen;

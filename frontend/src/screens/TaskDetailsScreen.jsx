@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, TextInput, Alert, StyleSheet} from 'react-native';
+import {View, Text, Alert, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {useLocalSearchParams, useRouter} from 'expo-router';
 import {Button} from 'react-native-paper';
+import CustomTextInput from '../components/CustomTextInput'; // Import CustomTextInput
 
 const TaskDetailsScreen = () => {
   const {id} = useLocalSearchParams();
@@ -65,12 +66,23 @@ const TaskDetailsScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Edit Task</Text>
-      <TextInput style={styles.input} value={title} onChangeText={setTitle} />
-      <TextInput
-        style={styles.input}
+
+      {/* Single-line input for Title */}
+      <CustomTextInput
+        placeholder="Task Title"
+        value={title}
+        onChangeText={setTitle}
+      />
+
+      {/* Multiline input for Description */}
+      <CustomTextInput
+        placeholder="Task Description"
         value={description}
         onChangeText={setDescription}
+        multiline={true}
+        numberOfLines={4}
       />
+
       <Button
         mode="contained"
         onPress={handleUpdateTask}
@@ -92,7 +104,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'center',
   },
-  input: {borderWidth: 1, padding: 10, marginBottom: 10, borderRadius: 5},
 });
 
 export default TaskDetailsScreen;
